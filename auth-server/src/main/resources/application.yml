@@ -1,0 +1,9 @@
+spring:
+  data:
+    rest:
+      base-path: /auth
+server:
+  port: 8080
+  
+keystore:
+  password: mySecretKey
