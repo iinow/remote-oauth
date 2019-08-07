@@ -3,7 +3,18 @@ spring:
     rest:
       base-path: /auth
 server:
-  port: 8080
+  port: 8082
   
 keystore:
   password: mySecretKey
+  
+app:
+  tsx1: 
+    redirect-url: http://211.215.173.198:8080/#/redirect?token=%s
+  oauth:
+    sites:
+      - resource-name: 1
+        redirect-url: http://211.215.173.198:8082/oauth/redirect
+        client-secret: test
+        client-id: 524d446c73e56b0e2bd64962695d5259
+        token-url: https://kauth.kakao.com/oauth/token

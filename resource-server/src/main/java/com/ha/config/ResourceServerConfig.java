@@ -36,7 +36,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 //		http.csrf()
 //		http.requestMatchers().anyRequest().and().build();
 		http.authorizeRequests()
-			.antMatchers("/test").permitAll()
+			.antMatchers("/test", "/oauth/redirect").permitAll()
 			.anyRequest().authenticated();
 	}
 }

@@ -1,10 +1,20 @@
 package com.ha.config;
 
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -51,8 +61,14 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter{
     	
     	//https://chanwookpark.github.io/spring/oauth/2016/01/26/oauth2-spring-dev-guide/
     	// /oauth/token_key (JWT 토큰을 사용하는 경우 토큰 검증을 위한 공개키를 노출)가 있다
-    	security.tokenKeyAccess("permitAll()")
-        		.checkTokenAccess("permitAll()");
+//    	security.addTokenEndpointAuthenticationFilter((request, response, chain)->{
+//    		request.getServletContext();
+//    	});
+    	security.tokenKeyAccess("isAuthenticated()")
+        		.checkTokenAccess("isAuthenticated()");
+//        			.requestMatchers()
+//        			.antMatchers("oauth/redirect")
+//        			.and();
     }
 
     /**
