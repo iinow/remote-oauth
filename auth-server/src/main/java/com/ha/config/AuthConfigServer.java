@@ -1,20 +1,10 @@
 package com.ha.config;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -27,48 +17,51 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.ha.common.GrantType;
+import com.ha.common.AuthDefine.GrantType;
 
 @Configuration
 @EnableAuthorizationServer
-public class AuthConfig extends AuthorizationServerConfigurerAdapter{
+public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
 	
     @Autowired
     private Environment environment;
 
+    
+    /**
+		endpoints.pathMapping("/oauth/token", "");
+		.tokenServices(new DefaultTokenServices())
+		.tokenGranter(new TokenGranter() {
+		.tokenGranter(new AuthorizationCodeGrant);
+		endpoints.tokenStore(new InMemoryTokenStore())
+		.tokenEnhancer(jwtTokenEnhancer());
+		.authenticationManager(authenticationManager);
+    */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
     	new ClientCredentialsAccessTokenProvider();
     	endpoints
     		.tokenEnhancer(new TokenEnhancerChain())
     		.tokenStore(new InMemoryTokenStore());
-//    		.tokenServices(new DefaultTokenServices())
-//    		.tokenGranter(new TokenGranter() {
-//    		.tokenGranter(new AuthorizationCodeGrant);
-    		
-    		
-//        endpoints.tokenStore(new InMemoryTokenStore())
-//                .tokenEnhancer(jwtTokenEnhancer());
-//                .authenticationManager(authenticationManager);
     }
 
+    
+    /**
+  		.tokenKeyAccess("isAnonymous() || hasAuthority('ROLE_TRUSTED_CLIENT')")
+		.checkTokenAccess("hasAuthority('ROLE_TRUSTED_CLIENT')")
+		.checkTokenAccess("isAuthenticated()");
+		https://chanwookpark.github.io/spring/oauth/2016/01/26/oauth2-spring-dev-guide/
+		/oauth/token_key (JWT 토큰을 사용하는 경우 토큰 검증을 위한 공개키를 노출)가 있다
+		security.addTokenEndpointAuthenticationFilter((request, response, chain)->{
+		request.getServletContext();
+		});c
+     * */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-//    	.tokenKeyAccess("isAnonymous() || hasAuthority('ROLE_TRUSTED_CLIENT')")
-//        .checkTokenAccess("hasAuthority('ROLE_TRUSTED_CLIENT')")
-//                .checkTokenAccess("isAuthenticated()");
-    	
-    	//https://chanwookpark.github.io/spring/oauth/2016/01/26/oauth2-spring-dev-guide/
-    	// /oauth/token_key (JWT 토큰을 사용하는 경우 토큰 검증을 위한 공개키를 노출)가 있다
-//    	security.addTokenEndpointAuthenticationFilter((request, response, chain)->{
-//    		request.getServletContext();
-//    	});
     	security.tokenKeyAccess("isAuthenticated()")
         		.checkTokenAccess("isAuthenticated()");
-//        			.requestMatchers()
-//        			.antMatchers("oauth/redirect")
-//        			.and();
     }
 
     /**
@@ -85,10 +78,6 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter{
                 .authorities("ADMIN", "CLIENT", "ANOYMOUS")
                 .authorizedGrantTypes(
                 		GrantType.CLIENT_CREDENTIALS.toTypeString()) 
-//                		GrantType.AUTHORIZATION_CODE.toTypeString(), 
-//                		GrantType.IMPLICIT.toTypeString(), 
-//                		GrantType.PASSWORD.toTypeString(),
-//                		GrantType.REFRESH_TOKEN.toTypeString())
                 .scopes("resource-server-read", "resource-server-write")
                 .accessTokenValiditySeconds(300).autoApprove(true);
     }
@@ -108,4 +97,18 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter{
         converter.setKeyPair(keyStoreKeyFactory.getKeyPair("jwt"));
         return converter;
     }
+    
+    @Bean
+	public WebMvcConfigurer webMvcConfigurer() {
+	    return new WebMvcConfigurer() {
+	        @Override
+	        public void addCorsMappings(CorsRegistry registry) {
+	            registry.addMapping("/*")
+	                    .allowedOrigins("*")
+	                    .allowedMethods("*")
+	                    .allowCredentials(false)
+	                    .maxAge(3600);
+	        }
+	    };
+	}
 }

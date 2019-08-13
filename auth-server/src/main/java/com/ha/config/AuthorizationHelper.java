@@ -58,4 +58,29 @@ public class AuthorizationHelper {
 		log.info("receive data: "+resMap.toString());
 		return resMap.get("access_token").toString();
 	}
+	
+	public String postGithubAuthorizationCode(String code) {
+		AppOAuthSiteConfigData site = appConfig.getOauth().findOAuthSite(OAuthResource.GITHUB.type);
+		
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		map.add("client_secret",site.getClientSecret());
+		map.add("client_id",site.getClientId());
+		map.add("redirect_uri",site.getRedirectUrl());
+		map.add("code",code);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		
+		HttpEntity request = new HttpEntity(map, headers);
+		
+		log.info("보내기 전: "+map.toString());
+		Map resMap = restTemplate.exchange(
+				site.getTokenUrl(), 
+				HttpMethod.POST,
+				request,
+				Map.class).getBody();
+		
+		log.info("receive data: "+resMap.toString());
+		return resMap.get("access_token").toString();
+	}
 }

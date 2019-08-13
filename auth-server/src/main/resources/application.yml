@@ -2,19 +2,36 @@ spring:
   data:
     rest:
       base-path: /auth
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
+  datasource:
+    url: jdbc:mysql://192.168.167.15:3306/oauth
+    username: root
+    password: qlalfqjsghekd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
 server:
-  port: 8082
+  port: ${PORT:8082}
   
 keystore:
   password: mySecretKey
   
 app:
   tsx1: 
-    redirect-url: http://211.215.173.198:8080/#/redirect?token=%s
+    redirect-url: http://localhost:8080/redirect?token=%s
   oauth:
     sites:
       - resource-name: 1
         redirect-url: http://211.215.173.198:8082/oauth/redirect
-        client-secret: test
+        client-secret: zJQlrzwyZyrAYt73KksvEOoK5nmnyGSF
         client-id: 524d446c73e56b0e2bd64962695d5259
         token-url: https://kauth.kakao.com/oauth/token
+      - resource-name: 3
+        redirect-url: http://localhost:8082/github/oauth/redirect
+        client-secret: dd3626c9879e8f3455ee1596763c6bf7bcde4471
+        client-id: e6239cb309eaaba75d98
+        token-url: https://github.com/login/oauth/access_token
+        
