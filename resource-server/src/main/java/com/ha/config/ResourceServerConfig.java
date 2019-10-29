@@ -15,11 +15,14 @@ import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	
-	@Value(value = "app.resource.id")
-	private String resource_id;
+	private AppConfig appConfig;
+	
+	public ResourceServerConfig(AppConfig appConfig) {
+		this.appConfig = appConfig;
+	}
 	
 	@Autowired
-	private CustomRemoteTokenService remoteTokenService;
+	private RemoteTokenService remoteTokenService;
 	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -27,14 +30,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 //		service.setClientSecret("{noop}service-account-1-secret");
 		remoteTokenService.loadHttpMethod(HttpMethod.POST);
 		resources.tokenServices(remoteTokenService);
-		resources.resourceId(resource_id);
+		resources.resourceId(appConfig.getResource().getId());
 	}
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-//		http.cors()
-//		http.csrf()
-//		http.requestMatchers().anyRequest().and().build();
 		http.authorizeRequests()
 			.antMatchers("/test", "/oauth/redirect").permitAll()
 			.anyRequest().authenticated();

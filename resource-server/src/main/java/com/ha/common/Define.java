@@ -1,18 +1,6 @@
 package com.ha.common;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.ha.common.http.GithubTemplate;
-import com.ha.common.http.HttpServerTemplate;
-import com.ha.common.http.KakaoTemplate;
-
 public class Define {
-	
-	@Autowired
-	private GithubTemplate githubTemplate;
-	
-	@Autowired
-	private KakaoTemplate kakaoTemplate;
 	
 	public enum Provider {
 		KAKAO(1),
@@ -33,17 +21,5 @@ public class Define {
 			}
 			return null;
 		}
-		
-//		public HttpServerTemplate findHttpServerTemplate(OAuthResource type) {
-//			switch(type) {
-//				case GITHUB:
-//					return githubTemplate;
-//				case KAKAO:
-//					return kakaoTemplate;
-//				default:
-//					break;
-//			}
-//			return null;
-//		}
 	}
 }

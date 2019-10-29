@@ -3,7 +3,6 @@ server:
 
 app:
   resource: 
-    id: resource1  
-#spring:#  security:#    oauth2:#      resourceserver:#        jwt:#          issuer-uri: 
+    id: resource1
+    
 security:  oauth2:    resource:      token-info-uri: http://localhost:8082/oauth/check_token
-#      user-info-uri: dd

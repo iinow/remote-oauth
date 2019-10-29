@@ -1,4 +1,4 @@
-package com.ha.controller;
+package com.ha.api.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

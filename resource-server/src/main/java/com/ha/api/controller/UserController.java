@@ -1,4 +1,4 @@
-package com.ha.controller;
+package com.ha.api.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ha.api.service.UserServiceImpl;
 import com.ha.common.Define.Provider;
-import com.ha.service.UserService;
 
 @RestController
 @RequestMapping(name = "/users")
 public class UserController {
 	
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userService;
 	
 	@GetMapping(name = "")
 	public ResponseEntity<?> getUser(

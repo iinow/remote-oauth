@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class MemoModel extends BaseModel {
+public class User extends BaseEntity {
 	private static final long serialVersionUID = 7894937392353304597L;
 
 }
