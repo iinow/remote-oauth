@@ -3,6 +3,7 @@ package com.ha.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.ha.config.client.ClientDetailService;
+import com.ha.security.AuthAccessTokenConverter;
 import com.ha.security.BeforeClientCheckFilter;
 
 @Configuration
@@ -53,7 +56,9 @@ public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
     	new ClientCredentialsAccessTokenProvider();
     	endpoints
     		.tokenEnhancer(new TokenEnhancerChain())
-    		.tokenStore(tokenStore());
+//    		.tokenStore(tokenStore()).accessTokenConverter(jwtTokenEnhancer());
+    		.tokenStore(new InMemoryTokenStore());
+    	endpoints.accessTokenConverter(new AuthAccessTokenConverter());
     }
 
     
@@ -66,11 +71,12 @@ public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
 		security.addTokenEndpointAuthenticationFilter((request, response, chain)->{
 		request.getServletContext();
 		});c
+		isAuthenticated
      * */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-    	security.tokenKeyAccess("isAuthenticated()")
-        		.checkTokenAccess("isAuthenticated()");
+    	security.tokenKeyAccess("permitAll()")
+        		.checkTokenAccess("permitAll()");
     	security.addTokenEndpointAuthenticationFilter(userFilter);
     }
 
@@ -98,6 +104,15 @@ public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setKeyPair(keyStoreKeyFactory.getKeyPair("jwt"));
         return converter;
+    }
+    
+    @Bean
+	@Primary
+	public DefaultTokenServices tokenService() {
+		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+		defaultTokenServices.setTokenStore(tokenStore());
+		defaultTokenServices.setSupportRefreshToken(true);
+		return defaultTokenServices;
     }
     
     @Bean
