@@ -23,7 +23,7 @@ public class ClientController {
 	public ResponseEntity<?> getClientModel(
 			@RequestParam(name = "clientid", required = true) String clientId,
 			HttpServletRequest request, HttpServletResponse response){
-		Client client = service.findOneByClientId(clientId);
+		Client client = service.getClient(clientId);
 		return ResponseEntity.ok(client);
 	}
 }

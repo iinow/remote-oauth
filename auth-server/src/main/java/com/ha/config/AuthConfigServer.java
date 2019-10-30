@@ -53,7 +53,7 @@ public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
     	new ClientCredentialsAccessTokenProvider();
     	endpoints
     		.tokenEnhancer(new TokenEnhancerChain())
-    		.tokenStore(new InMemoryTokenStore());
+    		.tokenStore(tokenStore());
     }
 
     
@@ -81,15 +81,6 @@ public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
      * */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-//        clients.inMemory()
-//                .withClient("admin")
-//                .secret("{noop}admin")
-//                .refreshTokenValiditySeconds(1500)
-//                .authorities("ADMIN", "CLIENT", "ANOYMOUS")
-//                .authorizedGrantTypes(
-//                		GrantType.CLIENT_CREDENTIALS.toTypeString()) 
-//                .scopes("resource-server-read", "resource-server-write")
-//                .accessTokenValiditySeconds(300).autoApprove(true);
         clients.withClientDetails(clientDetailService);
     }
     

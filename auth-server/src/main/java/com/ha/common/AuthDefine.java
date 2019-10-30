@@ -5,6 +5,7 @@ import com.ha.exception.GrantTypeNotFoundException;
 
 public class AuthDefine {
 	public enum OAuthResource {
+		LOCAL(0),
 		KAKAO(1),
 		GOOGLE(2),
 		GITHUB(3);
@@ -29,7 +30,7 @@ public class AuthDefine {
 	 * @author BISHOP
 	 * @since 2019.08.05
 	 * 
-	 * 1. authorization code /oauth/authorize API ·Î ¿äÃ»ÇØ¼­ ÄÚµå¸¦ ¹Þ¾Æ¾ßÇÑ´Ù. »çÀü¿¡ 
+	 * 1. authorization code /oauth/authorize API ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½Ø¼ï¿½ ï¿½Úµå¸¦ ï¿½Þ¾Æ¾ï¿½ï¿½Ñ´ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	 * */
 	public enum GrantType {
 		NONE(0){

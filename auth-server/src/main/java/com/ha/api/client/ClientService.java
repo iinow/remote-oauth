@@ -20,9 +20,11 @@ public class ClientService {
 	private EntityManager manager;
 	
 	@Transactional
-	public Client findOneByClientId(String clientId) {
+	public Client getClient(String clientId) {
 		Client client = repository.findOneByClientId(clientId);
-		Hibernate.initialize(client);
+		client.getGranttypes().isEmpty();
+		client.getScopes().isEmpty();
+//		Hibernate.initialize(client);
 		return client;
 	}
 	

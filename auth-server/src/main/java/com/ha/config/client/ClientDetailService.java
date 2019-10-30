@@ -23,7 +23,7 @@ public class ClientDetailService implements ClientDetailsService {
 	@Override
 	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
 		if(map.get(clientId) == null) {
-			Client client = clientService.findOneByClientId(clientId);
+			Client client = clientService.getClient(clientId);
 			map.put(clientId, new ClientDetailsDecorator(client));
 		}
 		return map.get(clientId);

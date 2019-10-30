@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,10 +43,10 @@ public class Client extends BaseEntity {
 	@Column(name = "type")
 	private Integer type;
 	
-	@OneToMany(mappedBy = "client")
+	@OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
 	private List<ClientScope> scopes = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "client")
+	@OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
 	private List<ClientGrantType> granttypes = new ArrayList<>();
 	
 	public OAuthResource findResource() {
