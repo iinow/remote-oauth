@@ -14,7 +14,7 @@ import com.ha.api.service.UserServiceImpl;
 import com.ha.common.Define.Provider;
 
 @RestController
-@RequestMapping(name = "/users")
+@RequestMapping(value = "users")
 public class UserController {
 	
 	@Autowired
