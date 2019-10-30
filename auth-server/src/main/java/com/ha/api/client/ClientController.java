@@ -1,4 +1,4 @@
-package com.ha.controller;
+package com.ha.api.client;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ha.entity.AuthClientModel;
-import com.ha.service.ClientService;
+import com.ha.entity.Client;
 
 @RestController
 @RequestMapping("clients")
@@ -24,7 +23,7 @@ public class ClientController {
 	public ResponseEntity<?> getClientModel(
 			@RequestParam(name = "clientid", required = true) String clientId,
 			HttpServletRequest request, HttpServletResponse response){
-		AuthClientModel client = service.findOneByClientId(clientId);
+		Client client = service.findOneByClientId(clientId);
 		return ResponseEntity.ok(client);
 	}
 }

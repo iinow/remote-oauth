@@ -17,6 +17,9 @@ import com.ha.config.AppConfig.AppOAuthSiteConfigData;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @deprecated
+ * */
 @Slf4j(topic = "AuthorizationHelper")
 @Component
 public class AuthorizationHelper {
@@ -48,7 +51,7 @@ public class AuthorizationHelper {
 		
 		HttpEntity request = new HttpEntity(map, headers);
 		
-		log.info("º¸³»±â Àü: "+map.toString());
+		log.info("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: "+map.toString());
 		Map resMap = restTemplate.exchange(
 				site.getTokenUrl(), 
 				HttpMethod.POST,
@@ -73,7 +76,7 @@ public class AuthorizationHelper {
 		
 		HttpEntity request = new HttpEntity(map, headers);
 		
-		log.info("º¸³»±â Àü: "+map.toString());
+		log.info("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: "+map.toString());
 		Map resMap = restTemplate.exchange(
 				site.getTokenUrl(), 
 				HttpMethod.POST,

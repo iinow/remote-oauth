@@ -1,6 +1,4 @@
-package com.ha.controller;
-
-import java.util.Map;
+package com.ha.api.redirect;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,15 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ha.api.redirect.RedirectService;
 import com.ha.config.AppConfig;
-import com.ha.config.AuthorizationHelper;
-import com.ha.service.RedirectService;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "RedirectController")
@@ -34,8 +29,8 @@ public class RedirectController {
 	private RedirectService redirectService;
 
 	/**
-	 * Ä«Ä«¿À °°Àº °æ¿ì ÇÁ·ÎÇÊ ÀÌ¸§À» °¡Á®¿Í¼­ UserName ¿¡ ³Ö¾î ÁØ´ÙµçÁö...
-	 * ¿©±â¼­ È¸¿ø°¡ÀÔ Ã³¸® ÇØÁÖÀÚ
+	 * Ä«Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ UserName ï¿½ï¿½ ï¿½Ö¾ï¿½ ï¿½Ø´Ùµï¿½ï¿½ï¿½...
+	 * ï¿½ï¿½ï¿½â¼­ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * */
 	@GetMapping("/oauth/redirect")
 	public ResponseEntity<Object> kakaoRedirect(

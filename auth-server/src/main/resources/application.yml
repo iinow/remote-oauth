@@ -8,7 +8,7 @@ spring:
     show-sql: true
     
   datasource:
-    url: jdbc:mysql://192.168.167.15:3306/oauth
+    url: jdbc:mysql://192.168.0.15:3306/auth
     username: root
     password: qlalfqjsghekd
     driver-class-name: com.mysql.cj.jdbc.Driver

@@ -9,13 +9,13 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.stereotype.Service;
 
-import com.ha.entity.AuthClientModel;
-import com.ha.service.ClientService;
+import com.ha.api.client.ClientService;
+import com.ha.entity.Client;
 
 @Service
-public class AuthClientDetailService implements ClientDetailsService {
+public class ClientDetailService implements ClientDetailsService {
 
-	private Map<String, AuthClientDetailsDecorator> map = new HashMap<>();
+	private Map<String, ClientDetailsDecorator> map = new HashMap<>();
 
 	@Autowired
 	private ClientService clientService;
@@ -23,8 +23,8 @@ public class AuthClientDetailService implements ClientDetailsService {
 	@Override
 	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
 		if(map.get(clientId) == null) {
-			AuthClientModel client = clientService.findOneByClientId(clientId);
-			map.put(clientId, new AuthClientDetailsDecorator(client));
+			Client client = clientService.findOneByClientId(clientId);
+			map.put(clientId, new ClientDetailsDecorator(client));
 		}
 		return map.get(clientId);
 	}

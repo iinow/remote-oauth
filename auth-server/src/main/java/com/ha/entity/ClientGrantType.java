@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Table(name = "client_granttypes")
-public class AuthClientGrantTypeModel extends BaseModel {
+public class ClientGrantType extends BaseEntity {
 	private static final long serialVersionUID = -1923402086737063127L;
 
 	@Id
@@ -27,7 +27,7 @@ public class AuthClientGrantTypeModel extends BaseModel {
 	
 	@ManyToOne
 	@JoinColumn(name = "clientId")
-	private AuthClientModel client;
+	private Client client;
 	
 	@Column(name = "grant_type")
 	private String grantType;

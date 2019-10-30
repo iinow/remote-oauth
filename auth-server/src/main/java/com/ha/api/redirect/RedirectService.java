@@ -1,4 +1,4 @@
-package com.ha.service;
+package com.ha.api.redirect;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

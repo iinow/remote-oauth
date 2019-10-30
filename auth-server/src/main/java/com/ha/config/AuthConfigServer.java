@@ -1,7 +1,6 @@
 package com.ha.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -22,7 +21,8 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.ha.common.AuthDefine.GrantType;
+import com.ha.config.client.ClientDetailService;
+import com.ha.security.BeforeClientCheckFilter;
 
 @Configuration
 @EnableAuthorizationServer
@@ -33,6 +33,11 @@ public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
     @Autowired
     private Environment environment;
 
+    @Autowired
+    private ClientDetailService clientDetailService;
+    
+    @Autowired
+    private BeforeClientCheckFilter userFilter;
     
     /**
 		endpoints.pathMapping("/oauth/token", "");
@@ -57,7 +62,7 @@ public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
 		.checkTokenAccess("hasAuthority('ROLE_TRUSTED_CLIENT')")
 		.checkTokenAccess("isAuthenticated()");
 		https://chanwookpark.github.io/spring/oauth/2016/01/26/oauth2-spring-dev-guide/
-		/oauth/token_key (JWT ÅäÅ«À» »ç¿ëÇÏ´Â °æ¿ì ÅäÅ« °ËÁõÀ» À§ÇÑ °ø°³Å°¸¦ ³ëÃâ)°¡ ÀÖ´Ù
+		/oauth/token_key (JWT ï¿½ï¿½Å«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Å« ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½Ö´ï¿½
 		security.addTokenEndpointAuthenticationFilter((request, response, chain)->{
 		request.getServletContext();
 		});c
@@ -66,24 +71,26 @@ public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
     	security.tokenKeyAccess("isAuthenticated()")
         		.checkTokenAccess("isAuthenticated()");
+    	security.addTokenEndpointAuthenticationFilter(userFilter);
     }
 
     /**
      * {@link https://tools.ietf.org/html/rfc6749#section-4.4.3}
-     * Client_Credentials ·Î refresh_token ±îÁö ¹Þ´Â °ÍÀº RFC ¸í¼¼ º¸¸é Æ÷ÇÔÇÏÁö ¸»¶ó°í ÀûÇô ÀÖÀ½
+     * Client_Credentials ï¿½ï¿½ refresh_token ï¿½ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½ RFC ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
      * 
      * */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-                .withClient("service-account-1")
-                .secret("{noop}service-account-1-secret")
-                .refreshTokenValiditySeconds(1500)
-                .authorities("ADMIN", "CLIENT", "ANOYMOUS")
-                .authorizedGrantTypes(
-                		GrantType.CLIENT_CREDENTIALS.toTypeString()) 
-                .scopes("resource-server-read", "resource-server-write")
-                .accessTokenValiditySeconds(300).autoApprove(true);
+//        clients.inMemory()
+//                .withClient("admin")
+//                .secret("{noop}admin")
+//                .refreshTokenValiditySeconds(1500)
+//                .authorities("ADMIN", "CLIENT", "ANOYMOUS")
+//                .authorizedGrantTypes(
+//                		GrantType.CLIENT_CREDENTIALS.toTypeString()) 
+//                .scopes("resource-server-read", "resource-server-write")
+//                .accessTokenValiditySeconds(300).autoApprove(true);
+        clients.withClientDetails(clientDetailService);
     }
     
     @Bean

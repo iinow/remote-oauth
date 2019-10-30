@@ -9,14 +9,14 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 
-import com.ha.entity.AuthClientModel;
+import com.ha.entity.Client;
 
-public class AuthClientDetailsDecorator implements ClientDetails {
+public class ClientDetailsDecorator implements ClientDetails {
 	private static final long serialVersionUID = -5769851545490163125L;
 
-	private AuthClientModel client;
+	private Client client;
 	
-	public AuthClientDetailsDecorator(AuthClientModel client) {
+	public ClientDetailsDecorator(Client client) {
 		this.client = client;
 	}
 	

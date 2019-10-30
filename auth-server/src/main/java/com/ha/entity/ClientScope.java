@@ -20,7 +20,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Table(name = "client_scopes")
-public class AuthClientScopeModel extends BaseModel {
+public class ClientScope extends BaseEntity {
 	private static final long serialVersionUID = -2879243198730446181L;
 
 	@Id
@@ -30,7 +30,7 @@ public class AuthClientScopeModel extends BaseModel {
 	
 	@ManyToOne
 	@JoinColumn(name = "clientId")
-	private AuthClientModel client;
+	private Client client;
 	
 	@Column(name= "scope")
 	private String scope;

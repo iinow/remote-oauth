@@ -1,4 +1,4 @@
-package com.ha.service;
+package com.ha.api.client;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -8,8 +8,7 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ha.entity.AuthClientModel;
-import com.ha.repository.ClientRepository;
+import com.ha.entity.Client;
 
 @Service
 public class ClientService {
@@ -21,14 +20,14 @@ public class ClientService {
 	private EntityManager manager;
 	
 	@Transactional
-	public AuthClientModel findOneByClientId(String clientId) {
-		AuthClientModel client = repository.findOneByClientId(clientId);
+	public Client findOneByClientId(String clientId) {
+		Client client = repository.findOneByClientId(clientId);
 		Hibernate.initialize(client);
 		return client;
 	}
 	
 	@Transactional
-	public AuthClientModel insert(AuthClientModel client) {
+	public Client insert(Client client) {
 		return repository.save(client);
 	}
 }

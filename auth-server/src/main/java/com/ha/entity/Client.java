@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(name = "clients")
-public class AuthClientModel extends BaseModel {
+public class Client extends BaseEntity {
 	private static final long serialVersionUID = -5045155070119647772L;
 
 	@Id
@@ -43,10 +43,10 @@ public class AuthClientModel extends BaseModel {
 	private Integer type;
 	
 	@OneToMany(mappedBy = "client")
-	private List<AuthClientScopeModel> scopes = new ArrayList<>();
+	private List<ClientScope> scopes = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "client")
-	private List<AuthClientGrantTypeModel> granttypes = new ArrayList<>();
+	private List<ClientGrantType> granttypes = new ArrayList<>();
 	
 	public OAuthResource findResource() {
 		return OAuthResource.findOAuthResource(getType());
