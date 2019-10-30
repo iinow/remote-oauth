@@ -26,6 +26,8 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
+import com.ha.exception.CheckTokenConnectException;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Primary
@@ -67,8 +69,8 @@ public class RemoteTokenService implements ResourceServerTokenServices {
 	public OAuth2Authentication loadAuthentication(String accessToken) throws AuthenticationException, InvalidTokenException {
 		MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
 		formData.add(tokenName, accessToken);
+		
 		HttpHeaders headers = new HttpHeaders();
-//		headers.set("Content-type", "application/x-www-form-urlencoded");
 		if(isAuthentication) {
 			headers.set("Authorization", getAuthorizationHeader(clientId, clientSecret));
 		}
@@ -120,11 +122,15 @@ public class RemoteTokenService implements ResourceServerTokenServices {
 		if (headers.getContentType() == null) {
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		}
-		@SuppressWarnings("rawtypes")
-		Map map = restTemplate.exchange(path, this.method,
-				new HttpEntity<MultiValueMap<String, String>>(formData, headers), Map.class).getBody();
-		@SuppressWarnings("unchecked")
-		Map<String, Object> result = map;
-		return result;
+		try {
+			@SuppressWarnings("rawtypes")
+			Map map = restTemplate.exchange(path, this.method, new HttpEntity<MultiValueMap<String, String>>(formData, headers), Map.class).getBody();
+			
+			@SuppressWarnings("unchecked")
+			Map<String, Object> result = map;
+			return result;	
+		} catch (Exception e) {
+			throw new CheckTokenConnectException();
+		}
 	}
 }

@@ -1,42 +1,48 @@
 package com.ha.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
+
+import com.ha.security.entry.AuthExceptionEntryPoint;
+import com.ha.security.handler.AuthAccessDeniedHandler;
 
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	
 	private AppConfig appConfig;
+	private RemoteTokenService remoteTokenService;
+	private AuthAccessDeniedHandler deniedHandler;
 	
-	public ResourceServerConfig(AppConfig appConfig) {
+	public ResourceServerConfig(AppConfig appConfig, RemoteTokenService remoteTokenService, AuthAccessDeniedHandler deniedHandler) {
 		this.appConfig = appConfig;
+		this.remoteTokenService = remoteTokenService;
+		this.deniedHandler = deniedHandler;
 	}
 	
-	@Autowired
-	private RemoteTokenService remoteTokenService;
 	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-//		service.setClientId("service-account-1");
-//		service.setClientSecret("{noop}service-account-1-secret");
 		remoteTokenService.loadHttpMethod(HttpMethod.POST);
+		resources.accessDeniedHandler(null);
 		resources.tokenServices(remoteTokenService);
 		resources.resourceId(appConfig.getResource().getId());
+		resources.authenticationEntryPoint(new AuthExceptionEntryPoint())
+			.accessDeniedHandler(deniedHandler);
 	}
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-			.antMatchers("/test", "/oauth/redirect").permitAll()
-			.anyRequest().authenticated();
+			.antMatchers("/health").permitAll()
+			.anyRequest().authenticated()
+			.and()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and();
 	}
 }
