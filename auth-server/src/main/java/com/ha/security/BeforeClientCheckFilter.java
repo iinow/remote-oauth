@@ -30,6 +30,8 @@ import com.ha.exception.UserPasswordNotMatchedException;
 @Component
 public class BeforeClientCheckFilter extends OncePerRequestFilter {
 
+	private final static String path = "/oauth/token";
+	
 	private UserService userService;
 	
 	public BeforeClientCheckFilter(UserService userService) {
@@ -39,17 +41,19 @@ public class BeforeClientCheckFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		try {
-			String username = request.getParameter("username");
-			String password = request.getParameter("password");
-			
-			User user = userService.getUser(username);
-			if(!Utils.passwordMatch(password, user.getPassword())) {
-				throw new UserPasswordNotMatchedException(username);
+			if(path.equals(request.getRequestURI())) {
+				String username = request.getParameter("username");
+				String password = request.getParameter("password");
+				
+				User user = userService.getUser(username);
+				if(!Utils.passwordMatch(password, user.getPassword())) {
+					throw new UserPasswordNotMatchedException(username);
+				}
 			}
-			
-			filterChain.doFilter(request, response);
 		} catch (Exception e) {
 			response.getWriter().write(e.getMessage());
+			return;
 		}
+		filterChain.doFilter(request, response);
 	}
 }
