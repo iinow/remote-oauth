@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.ha.common.AuthDefine.OAuthResource;
+import com.ha.common.AuthDefine.PROVIDER;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -49,7 +49,7 @@ public class Client extends BaseEntity {
 	@OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
 	private List<ClientGrantType> granttypes = new ArrayList<>();
 	
-	public OAuthResource findResource() {
-		return OAuthResource.findOAuthResource(getType());
+	public PROVIDER findResource() {
+		return PROVIDER.findPROVIDER(getType());
 	}
 }

@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ha.api.user.UserService;
+import com.ha.common.AuthDefine.PROVIDER;
 import com.ha.common.Utils;
 import com.ha.entity.User;
 
@@ -37,7 +38,9 @@ public class UserControllerTests {
 	@Test
 	public void getUser() {
 		User u = new User();
-		u.setUsername("Joon-Ha");
+		u.setEmail("haha@haha.com");
+		u.setName("Joon-Ha");
+		u.setProvider(PROVIDER.LOCAL);
 		u.setPassword(Utils.passwordEncoded("1234"));
 		assertNotNull(userService.addUser(u).getId());
 	}

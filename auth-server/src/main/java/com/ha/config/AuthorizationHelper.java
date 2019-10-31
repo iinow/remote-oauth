@@ -1,19 +1,8 @@
 package com.ha.config;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import com.ha.common.AuthDefine.OAuthResource;
-import com.ha.config.AppConfig.AppOAuthSiteConfigData;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,52 +27,54 @@ public class AuthorizationHelper {
 	 * -X POST https://kauth.kakao.com/oauth/token
 	 * */
 	public String postAuthorizationCode(String code) {
-		AppOAuthSiteConfigData site = appConfig.getOauth().findOAuthSite(OAuthResource.KAKAO.type);
-		
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-		map.add("grant_type","authorization_code");
-		map.add("client_id",site.getClientId());
-		map.add("redirect_uri",site.getRedirectUrl());
-		map.add("code",code);
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		
-		HttpEntity request = new HttpEntity(map, headers);
-		
-		log.info("������ ��: "+map.toString());
-		Map resMap = restTemplate.exchange(
-				site.getTokenUrl(), 
-				HttpMethod.POST,
-				request,
-				Map.class).getBody();
-		
-		log.info("receive data: "+resMap.toString());
-		return resMap.get("access_token").toString();
+//		AppOAuthSiteConfigData site = appConfig.getOauth().findOAuthSite(PROVIDER.KAKAO.type);
+//		
+//		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+//		map.add("grant_type","authorization_code");
+//		map.add("client_id",site.getClientId());
+//		map.add("redirect_uri",site.getRedirectUrl());
+//		map.add("code",code);
+//		
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//		
+//		HttpEntity request = new HttpEntity(map, headers);
+//		
+//		log.info("������ ��: "+map.toString());
+//		Map resMap = restTemplate.exchange(
+//				site.getTokenUrl(), 
+//				HttpMethod.POST,
+//				request,
+//				Map.class).getBody();
+//		
+//		log.info("receive data: "+resMap.toString());
+//		return resMap.get("access_token").toString();
+		return null;
 	}
 	
 	public String postGithubAuthorizationCode(String code) {
-		AppOAuthSiteConfigData site = appConfig.getOauth().findOAuthSite(OAuthResource.GITHUB.type);
-		
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-		map.add("client_secret",site.getClientSecret());
-		map.add("client_id",site.getClientId());
-		map.add("redirect_uri",site.getRedirectUrl());
-		map.add("code",code);
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		
-		HttpEntity request = new HttpEntity(map, headers);
-		
-		log.info("������ ��: "+map.toString());
-		Map resMap = restTemplate.exchange(
-				site.getTokenUrl(), 
-				HttpMethod.POST,
-				request,
-				Map.class).getBody();
-		
-		log.info("receive data: "+resMap.toString());
-		return resMap.get("access_token").toString();
+//		AppOAuthSiteConfigData site = appConfig.getOauth().findOAuthSite(OAuthResource.GITHUB.type);
+//		
+//		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+//		map.add("client_secret",site.getClientSecret());
+//		map.add("client_id",site.getClientId());
+//		map.add("redirect_uri",site.getRedirectUrl());
+//		map.add("code",code);
+//		
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//		
+//		HttpEntity request = new HttpEntity(map, headers);
+//		
+//		log.info("������ ��: "+map.toString());
+//		Map resMap = restTemplate.exchange(
+//				site.getTokenUrl(), 
+//				HttpMethod.POST,
+//				request,
+//				Map.class).getBody();
+//		
+//		log.info("receive data: "+resMap.toString());
+//		return resMap.get("access_token").toString();
+		return null;
 	}
 }

@@ -23,7 +23,7 @@ import com.ha.exception.UserPasswordNotMatchedException;
  * 
  * MIME = x-www-form-urlencoded
  * 
- * @param username
+ * @param email
  * @param password
  * */
 
@@ -42,12 +42,12 @@ public class BeforeClientCheckFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		try {
 			if(path.equals(request.getRequestURI())) {
-				String username = request.getParameter("username");
+				String email = request.getParameter("email");
 				String password = request.getParameter("password");
 				
-				User user = userService.getUser(username);
+				User user = userService.getUserByEmail(email);
 				if(!Utils.passwordMatch(password, user.getPassword())) {
-					throw new UserPasswordNotMatchedException(username);
+					throw new UserPasswordNotMatchedException(email);
 				}
 			}
 		} catch (Exception e) {

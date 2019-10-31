@@ -1,28 +1,28 @@
 package com.ha.common;
 
-import com.ha.config.AppConfig.AppOAuthSiteConfigData;
 import com.ha.exception.GrantTypeNotFoundException;
 
 public class AuthDefine {
-	public enum OAuthResource {
+	public enum PROVIDER {
 		LOCAL(0),
-		KAKAO(1),
-		GOOGLE(2),
-		GITHUB(3);
+		GOOGLE(1), 
+		FACEBOOK(2), 
+		KAKAO(3), 
+		GITHUB(4);
 		
-		public final int type;
+		public final int value;
 		
-		OAuthResource(int type) {
-			this.type = type;
+		PROVIDER(int value) {
+			this.value = value;
 		}
 		
-		public static OAuthResource findOAuthResource(int type) {
-			for(OAuthResource resource: values()) {
-				if(resource.type == type) {
-					return resource;
+		public static PROVIDER findPROVIDER(int value) {
+			for(PROVIDER provider: PROVIDER.values()) {
+				if(provider.value == value) {
+					return provider;
 				}
 			}
-			return null;
+			throw new RuntimeException();
 		}
 	}
 	
