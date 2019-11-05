@@ -1,6 +1,7 @@
 package com.ha.config;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -22,6 +23,7 @@ public class AppConfig {
 	public static class Auth {
         private String tokenSecret;
         private long tokenExpirationMsec;
+        private long refreshTokenExpirationMsec;
 	}
 	
 	@Getter

@@ -14,6 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     
   security:
+#    strategy: MODE_GLOBAL
     user:
       name: admin
       password: admin
@@ -77,7 +78,10 @@ keystore:
 app:
   auth:
     tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    #60 * 60 * 24 * 10 * 1000 = 10일치
     tokenExpirationMsec: 864000000
+    #60 * 60 * 24 * 30 * 1000 = 30일치
+    refreshTokenExpirationMsec: 26136000000
   oauth2:
     authorizedRedirectUris:
       - http://localhost:3000/oauth2
