@@ -7,6 +7,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,9 +37,13 @@ public class BeforeClientCheckFilter extends OncePerRequestFilter {
 	private final static String path = "/oauth/token";
 	
 	private UserService userService;
+	private UserContext userContext;
 	
-	public BeforeClientCheckFilter(UserService userService) {
+	public BeforeClientCheckFilter(
+			final UserService userService,
+			final UserContext userContext) {
 		this.userService = userService;
+		this.userContext = userContext;
 	}
 	
 	@Override
@@ -45,10 +53,12 @@ public class BeforeClientCheckFilter extends OncePerRequestFilter {
 				String email = request.getParameter("email");
 				String password = request.getParameter("password");
 				
-				User user = userService.getUserByEmail(email);
-				if(!Utils.passwordMatch(password, user.getPassword())) {
+				UserDetails userDetails = userService.loadUserByEmail(email);
+				if(!Utils.passwordMatch(password, userDetails.getPassword())) {
 					throw new UserPasswordNotMatchedException(email);
 				}
+				
+				userContext.setCurrentUser(request, userDetails);
 			}
 		} catch (Exception e) {
 			response.getWriter().write(e.getMessage());

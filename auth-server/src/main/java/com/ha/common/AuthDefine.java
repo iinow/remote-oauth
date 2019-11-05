@@ -99,4 +99,8 @@ public class AuthDefine {
 		
 		public abstract String toTypeString();
 	}
+	
+	public enum ClientScope {
+		
+	}
 }

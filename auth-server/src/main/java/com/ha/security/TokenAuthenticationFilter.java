@@ -26,17 +26,22 @@ import com.ha.security.handler.FilterExceptionHandler;
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	
-	@Autowired
     private TokenProvider tokenProvider;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
-    private FilterExceptionHandler exceptionController;
+    private FilterExceptionHandler exceptionHandler;
+    private UserContext userContext;
     
-    private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
-
+    public TokenAuthenticationFilter(
+    		final TokenProvider tokenProvider,
+    		final UserService userService,
+    		final FilterExceptionHandler exceptionHandler,
+    		final UserContext userContext) {
+    	this.tokenProvider = tokenProvider;
+    	this.userService = userService;
+    	this.exceptionHandler = exceptionHandler;
+    	this.userContext = userContext;
+	}
+    
     private ObjectMapper mapper = new ObjectMapper();
     
     /**
@@ -51,17 +56,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 Long userId = tokenProvider.getUserIdFromToken(jwt);
 
                 UserDetails userDetails = userService.loadUserById(userId);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                userContext.setCurrentUser(request, userDetails);
             }
             filterChain.doFilter(request, response);
         } catch (Exception ex) {
         	//로그는 StandardWrapperValve 여기서 찍기 때문에 내용을 찍을 필요 없음..
 //            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         	response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-            response.getWriter().write(mapper.writeValueAsString(exceptionController.handleJwtException(request, ex).getBody()));
+            response.getWriter().write(mapper.writeValueAsString(exceptionHandler.handleJwtException(request, ex).getBody()));
         }
     }
 

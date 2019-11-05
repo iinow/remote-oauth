@@ -53,6 +53,10 @@ public class UserService extends DefaultOAuth2UserService {
 
         return UserPrincipal.create(user);
     }
+    
+    public UserDetails loadUserByEmail(String email) {
+    	return UserPrincipal.create(getUserByEmail(email));
+    }
 	
 	@Transactional
 	public User addUser(User user) {

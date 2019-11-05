@@ -1,6 +1,5 @@
 package com.ha.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -26,6 +25,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.ha.config.client.ClientDetailService;
 import com.ha.security.AuthAccessTokenConverter;
 import com.ha.security.BeforeClientCheckFilter;
+import com.ha.security.CustomTokenStore;
 
 @Configuration
 @EnableAuthorizationServer
@@ -33,32 +33,37 @@ import com.ha.security.BeforeClientCheckFilter;
 //@EnableOAuth2Sso
 public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
 	
-    @Autowired
     private Environment environment;
-
-    @Autowired
     private ClientDetailService clientDetailService;
-    
-    @Autowired
     private BeforeClientCheckFilter userFilter;
+    private CustomTokenStore tokenStore;
     
-    /**
-		endpoints.pathMapping("/oauth/token", "");
-		.tokenServices(new DefaultTokenServices())
-		.tokenGranter(new TokenGranter() {
-		.tokenGranter(new AuthorizationCodeGrant);
-		endpoints.tokenStore(new InMemoryTokenStore())
-		.tokenEnhancer(jwtTokenEnhancer());
-		.authenticationManager(authenticationManager);
-    */
+    public AuthConfigServer(
+    		final CustomTokenStore tokenStore,
+    		final BeforeClientCheckFilter userFilter,
+    		final ClientDetailService clientDetailService,
+    		final Environment environment) {
+    	this.environment = environment;
+    	this.clientDetailService = clientDetailService;
+    	this.userFilter = userFilter;
+    	this.tokenStore = tokenStore;
+	}
+    
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
     	new ClientCredentialsAccessTokenProvider();
+//    	JdbcTokenStore
+//    	endpoints
+//    		.tokenEnhancer(new TokenEnhancerChain())
+////    		.accessTokenConverter(new JwtAuthenticationConverter())
+//    		.tokenStore(tokenStore());
+//    	DefaultTokenServices tt = new DefaultTokenServices();
+//    	tt.setTokenStore(tokenStore);
     	endpoints
-    		.tokenEnhancer(new TokenEnhancerChain())
-//    		.tokenStore(tokenStore()).accessTokenConverter(jwtTokenEnhancer());
-    		.tokenStore(new InMemoryTokenStore());
-    	endpoints.accessTokenConverter(new AuthAccessTokenConverter());
+			.tokenEnhancer(new TokenEnhancerChain())
+			.tokenStore(new InMemoryTokenStore());
+	endpoints.accessTokenConverter(new AuthAccessTokenConverter());
+
     }
 
     
@@ -108,7 +113,7 @@ public class AuthConfigServer extends AuthorizationServerConfigurerAdapter{
     
     @Bean
 	@Primary
-	public DefaultTokenServices tokenService() {
+	public DefaultTokenServices defaultTokenService() {
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
 		defaultTokenServices.setTokenStore(tokenStore());
 		defaultTokenServices.setSupportRefreshToken(true);
