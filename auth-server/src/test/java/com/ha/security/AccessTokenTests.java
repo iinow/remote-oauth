@@ -25,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ha.AuthServerApplication;
 import com.ha.config.AppConfig;
+import com.ha.security.filter.BeforeClientCheckFilter;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -38,9 +39,6 @@ public class AccessTokenTests {
 	
 	@Autowired
 	private WebApplicationContext context;
-	
-	@Autowired
-	private BeforeClientCheckFilter beforeClientCheckFilter;
 	
 	private ObjectMapper mapper = new ObjectMapper();
 	

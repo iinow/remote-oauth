@@ -7,6 +7,8 @@ import javax.transaction.Transactional;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -23,7 +25,7 @@ import com.ha.security.OAuth2UserInfoFactory;
 import com.ha.security.UserPrincipal;
 
 @Service
-public class UserService extends DefaultOAuth2UserService {
+public class UserService extends DefaultOAuth2UserService implements UserDetailsService {
 	
 	private UserRepository userRepository;
 	
@@ -115,4 +117,9 @@ public class UserService extends DefaultOAuth2UserService {
         existingUser.setImageUrl(oAuth2UserInfo.getImageUrl());
         return userRepository.save(existingUser);
     }
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return loadUserByEmail(username);
+	}
 }

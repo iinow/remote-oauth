@@ -76,7 +76,7 @@ public class AuthenticationToken extends BaseEntity implements OAuth2AccessToken
 
 	@Override
 	public String getTokenType() {
-		return getTokenType();
+		return this.tokenType;
 	}
 
 	@Override

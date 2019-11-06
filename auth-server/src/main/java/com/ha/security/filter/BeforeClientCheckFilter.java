@@ -1,4 +1,4 @@
-package com.ha.security;
+package com.ha.security.filter;
 
 import java.io.IOException;
 
@@ -18,6 +18,7 @@ import com.ha.api.user.UserService;
 import com.ha.common.Utils;
 import com.ha.entity.User;
 import com.ha.exception.UserPasswordNotMatchedException;
+import com.ha.security.UserContext;
 
 /**
  * @author BISHOP
@@ -26,6 +27,12 @@ import com.ha.exception.UserPasswordNotMatchedException;
  * BasicAuthenticationFilter에서 grant_type을 확인하기 전에 해당 필터를 탄다.
  * 
  * MIME = x-www-form-urlencoded
+ * 
+ * 소셜 로그인과 인가 filter 체인은 내용이 다르다
+ * 
+ * BasicAuthenticationFilter 에서 SecurityContext Holder 를 set 해준다. 그러므로 여긴 안하고 넘어간다.
+ * 
+ * 여긴 사용자 아이디, 비밀번호 확인하는 곳
  * 
  * @param email
  * @param password
@@ -57,8 +64,6 @@ public class BeforeClientCheckFilter extends OncePerRequestFilter {
 				if(!Utils.passwordMatch(password, userDetails.getPassword())) {
 					throw new UserPasswordNotMatchedException(email);
 				}
-				
-				userContext.setCurrentUser(request, userDetails);
 			}
 		} catch (Exception e) {
 			response.getWriter().write(e.getMessage());

@@ -1,4 +1,4 @@
-package com.ha.security;
+package com.ha.security.filter;
 
 import java.io.IOException;
 
@@ -21,6 +21,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ha.api.user.UserService;
+import com.ha.security.TokenProvider;
+import com.ha.security.UserContext;
 import com.ha.security.handler.FilterExceptionHandler;
 
 @Component
